@@ -1,8 +1,12 @@
 from django.utils import timezone
+from pytils.translit import slugify
 
+from django.contrib.auth import get_user_model
 from django.db import models
 
-from pytils.translit import slugify
+
+User = get_user_model()
+
 
 class Category(models.Model):
     title = models.CharField(max_length=200, unique=True)
@@ -24,12 +28,11 @@ class Product(models.Model):
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     image = models.ImageField(upload_to='products/', null=True, blank=True)
-    pub_date = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
 
 
     class Meta:
-        ordering = ['-pub_date']
+        ordering = ['price']
 
     def __str__(self):
         return self.title
@@ -41,4 +44,15 @@ class Product(models.Model):
     #         current = timezone.now().strftime('%s')
     #         self.slug = slugify(self.title) + current
     #     super().save()
+
+
+class Review(models.Model):
+    content = models.TextField()
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
+    pub_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-pub_date']
+
 
