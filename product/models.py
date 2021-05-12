@@ -26,7 +26,7 @@ class Product(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=100, primary_key=True)
     description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=0)
     image = models.ImageField(upload_to='products/', null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
 
@@ -55,4 +55,7 @@ class Review(models.Model):
     class Meta:
         ordering = ['-pub_date']
 
-
+class Like(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='likes')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes')
+    is_liked = models.BooleanField(default=False)

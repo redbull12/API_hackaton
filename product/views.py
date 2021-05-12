@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.viewsets import ModelViewSet
 
-from .models import Category, Product, Review
+from .models import Category, Product, Review, Like
 from .permissions import IsAdminPermission#, IsAuthorPermission
 from .serializers import CategorySerializer, ProductSerializer, ReviewSerializer, ProductsListSerializer
 
@@ -37,8 +37,8 @@ class ProductViewSet(ModelViewSet):
     def get_permissions(self):
         if self.action in ['create', 'update', 'partial_update', 'destroy']:
             permissions = [IsAdminPermission]
-        # elif self.action == 'like':
-        #     permissions = [IsAuthenticated]
+        elif self.action == 'like':
+            permissions = [IsAuthenticated]
         else:
             permissions = []
         return [perm() for perm in permissions]
@@ -48,8 +48,6 @@ class ProductViewSet(ModelViewSet):
             return ProductsListSerializer
         return self.serializer_class
 
-# /api/v1/posts/slug/
-#/api/v1/posts/slug/comments
     @action(['GET'], detail=True)
     def reviews(self, request, slug=None):
         product = self.get_object()
@@ -57,19 +55,42 @@ class ProductViewSet(ModelViewSet):
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data)
 
-    # def get_permissions(self):
-    #     if self.action == 'create':
-    #         permissions = [IsAdminPermission]
-    #     elif self.action in ['update', 'partial_update', 'destroy']:
-    #         permissions = [IsAuthorPermission]
-    #     elif self.action == 'like':
-    #         permissions = [IsAuthenticated]
-    #     else:
-    #         permissions = []
-    #     return [perm() for perm in permissions]
+    @action(['POST'], detail=True)
+    def like(self, request, slug=None):
+        product = self.get_object()
+        user = request.user
+        # message = 'liked' if like.is_liked else 'disliked'
+        try:
+            like = Like.objects.get(product=product, user=user)
+            like.is_liked = not like.is_liked
+            like.save()
+            message = 'liked' if like.is_liked else 'disliked'
+        except Like.DoesNotExist:
+            Like.objects.create(product=product, user=user, is_liked=True)
+        return Response(message, status=200)
 
     def get_serializer_context(self):
         return {'request': self.request, 'action': self.action}
+
+
+# -------------------------------------------------------
+class AddProduct(ProductDetail, ListCreateApiView):
+    serializer_class = AddToCartSerializer
+
+    @require_POST
+    def get(self, request):
+        cart_obj = Cart.objects.get_or_new(request)
+        product_id = request.POST.get('product_id')
+        qs = Product.objects.filter(id=product_id)
+        if qs.count() == 1:
+            product_obj = qs.first()
+            if product_obj not in cart_obj.products.all():
+                cart_obj.products.add(product_obj)
+            else:
+                cart_obj.products.remove(product_obj)
+            request.session['cart_items'] = cart_obj.products.count()
+        return Response(status=200, data={'message': 'Product has been added to cart'})
+# --------------------------------------------------------------------------------------
 
 
 @api_view(['GET'])

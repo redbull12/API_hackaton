@@ -19,33 +19,12 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = '__all__'
 
-    # def create(self, validated_data):
-    #     request = self.context.get('request')
-    #     user = request.user
-    #     tags = validated_data.pop('tags', [])
-    #     post = Product.objects.create(author=user, **validated_data)
-    #     for tag in tags:
-    #         post.tags.add(tag)
-    #     return post
-
-    # def get_fields(self):
-    #     action = self.context.get('action')
-    #     fields = super().get_fields()
-    #     if action == 'create':
-    #         fields.pop('slug')
-    #         fields.pop('author')
-    #     return fields
-
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation['category'] = CategorySerializer(instance.category, context=self.context).data
         representation['reviews'] = ReviewSerializer(instance.reviews.all(), many=True).data
+        representation['likes'] = instance.likes.count()
         return representation
-
-# class PostsListSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Post
-#         fields = ('title', 'slug', 'image')
 
 ###
 class ProductsListSerializer(serializers.ModelSerializer):
