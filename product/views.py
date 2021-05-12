@@ -32,12 +32,12 @@ class ProductViewSet(ModelViewSet):
                        filters.OrderingFilter]
     filterset_fields = ['category']
     search_fields = ['title']
-    ordering_fields = ['created_at', 'title']
+    ordering_fields = ['title']
 
     def get_permissions(self):
         if self.action in ['create', 'update', 'partial_update', 'destroy']:
             permissions = [IsAdminPermission]
-        # elif self.action == 'order':
+        # elif self.action == 'like':
         #     permissions = [IsAuthenticated]
         else:
             permissions = []

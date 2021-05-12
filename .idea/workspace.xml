@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="36671a3b-5916-4f27-90b4-079eadb7a66d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OnlineStore/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/OnlineStore/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OnlineStore/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/OnlineStore/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/product/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/product/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/product/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/product/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
