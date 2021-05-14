@@ -34,6 +34,7 @@ class ProductsListSerializer(serializers.ModelSerializer):
         model = Product
         fields = ['title', 'slug', 'image', 'price', 'details']
 
+
 ###
 class ReviewSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)

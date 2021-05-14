@@ -143,7 +143,7 @@ EMAIL_HOST_PASSWORD = config('EMAIL_PASSWORD')
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
+CART_SESSION_ID = 'cart'
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
@@ -153,6 +153,3 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ]
 }
-
-
-# b548249bcd336f1bde2352ffc4b88dcf9b7f4558

@@ -59,3 +59,8 @@ class Like(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='likes')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes')
     is_liked = models.BooleanField(default=False)
+
+
+# 22e8c57bd213caa9bae36f0fea19acd91cbfd97a
+
+

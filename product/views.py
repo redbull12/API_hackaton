@@ -8,9 +8,8 @@ from rest_framework.reverse import reverse
 from rest_framework.viewsets import ModelViewSet
 
 from .models import Category, Product, Review, Like
-from .permissions import IsAdminPermission#, IsAuthorPermission
+from .permissions import IsAdminPermission, IsAuthorPermission
 from .serializers import CategorySerializer, ProductSerializer, ReviewSerializer, ProductsListSerializer
-
 
 
 class CategoriesListView(ListAPIView):
@@ -73,25 +72,6 @@ class ProductViewSet(ModelViewSet):
         return {'request': self.request, 'action': self.action}
 
 
-# -------------------------------------------------------
-class AddProduct(ProductDetail, ListCreateApiView):
-    serializer_class = AddToCartSerializer
-
-    @require_POST
-    def get(self, request):
-        cart_obj = Cart.objects.get_or_new(request)
-        product_id = request.POST.get('product_id')
-        qs = Product.objects.filter(id=product_id)
-        if qs.count() == 1:
-            product_obj = qs.first()
-            if product_obj not in cart_obj.products.all():
-                cart_obj.products.add(product_obj)
-            else:
-                cart_obj.products.remove(product_obj)
-            request.session['cart_items'] = cart_obj.products.count()
-        return Response(status=200, data={'message': 'Product has been added to cart'})
-# --------------------------------------------------------------------------------------
-
 
 @api_view(['GET'])
 def api_root(request, format=None):
@@ -105,9 +85,3 @@ class ReviewCreateView(CreateAPIView):
     queryset = Review.objects.none()
     serializer_class = ReviewSerializer
     permission_classes = [IsAuthenticated]
-
-
-
-
-
-

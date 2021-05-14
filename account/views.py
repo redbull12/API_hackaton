@@ -17,7 +17,7 @@ class RegistrationView(APIView):
         serializer = UserSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            return Response('Пользователь успешно зарегистрирован',
+            return Response('Пользователь успешно зарегистрирован. Подтвердите аккаунт по почте',
                             status=201)
 
 
@@ -42,4 +42,3 @@ class LogoutView(APIView):
         user = request.user
         Token.objects.filter(user=user).delete()
         return Response('Вы успешно вышли', status=200)
-
